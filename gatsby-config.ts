@@ -18,6 +18,14 @@ const config: GatsbyConfig = {
     "gatsby-plugin-mdx",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
+    "gatsby-plugin-ffmpeg",
+    "gatsby-transformer-ffmpeg",
+    {
+      resolve: "gatsby-plugin-layout",
+      options: {
+        component: `${__dirname}/src/components/Layout`,
+      },
+    },
     {
       resolve: "gatsby-source-filesystem",
       options: {
