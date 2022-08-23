@@ -1,87 +1,108 @@
 import React from "react";
-import Layout from "./Layout";
 import { graphql } from "gatsby";
-import { IconDeviceDesktop } from "@tabler/icons";
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconDeviceDesktop,
+} from "@tabler/icons";
 import ReactPlayer from "react-player/file";
 import ContextConsumer from "../lib/context";
 import slugify from "slugify";
+import { useMantineColorScheme } from "@mantine/core";
+import {
+  fetchItem,
+  getLessonIndex,
+  navigateToLesson,
+  refineName,
+  setItem,
+} from "../utils";
 
 export default function Lesson({ data }: any) {
-  const lesson = data.file;
-  const refine = (val: string) => {
-    let value = val.replace(/^\d+-/i, "").replace(/^\d\.+/i, "");
-    return value;
-  };
+  const { colorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
 
-  let progressData: any;
-  if (typeof window !== "undefined") {
-    progressData = JSON.parse(
-      localStorage.getItem("fefa-ocs-progress-course") ?? "{}"
-    );
-  }
+  const lesson = data.file;
+  const name = lesson.name;
+  const sources = data.allFile.nodes;
+  const progress = fetchItem("fefa-ocs-progress-course");
 
   return (
     <ContextConsumer>
       {({ data, set }) => {
-        console.log(data);
         return (
-          <div className="flex flex-col space-y-5">
-            <div className="flex space-x-3 items-center">
-              <IconDeviceDesktop size={30} stroke={2} />
-              <h2 className="text-2xl font-bold">{refine(lesson.name)}</h2>
-            </div>
-            <ReactPlayer
-              controls
-              url={lesson.publicURL}
-              progressInterval={5000}
-              width={"100%"}
-              height={"auto"}
-              config={{ forceVideo: true }}
-              onProgress={({ played }) => {
-                const name = lesson.name;
-                const obj: any = {};
-                obj[name] = played * 100;
-                set({
-                  current: {
-                    ...data.current,
-                    ...obj,
-                  },
-                });
+          <>
+            <section className="w-full grid grid-cols-2 shadow-xl font-bold">
+              <button
+                disabled={getLessonIndex(sources) === 0}
+                className="navButton"
+                onClick={() => navigateToLesson("prev", sources)}
+              >
+                <IconChevronLeft size={20} />
+                <span>Previous Lecture</span>
+              </button>
+              <button
+                disabled={getLessonIndex(sources) === sources.length}
+                className={`navButton ${dark ? "bg-teal-800" : "bg-teal-200"}`}
+                onClick={() => navigateToLesson("next", sources)}
+              >
+                <span>Next Lecture</span>
+                <IconChevronRight size={20} />
+              </button>
+            </section>
 
-                if (typeof window !== "undefined") {
-                  let value = progressData[slugify(name)];
-                  if (!value || (value && value < played * 100)) {
-                    progressData[slugify(name)] = played * 100;
-                    localStorage.setItem(
-                      "fefa-ocs-progress-course",
-                      JSON.stringify(progressData)
-                    );
+            <div className="p-10 flex flex-col space-y-5">
+              <div className="flex space-x-3 items-center">
+                <IconDeviceDesktop size={30} stroke={2} />
+                <h2 className="text-2xl font-bold">
+                  {refineName(lesson.name)}
+                </h2>
+              </div>
+              <ReactPlayer
+                controls
+                url={lesson.publicURL}
+                progressInterval={5000}
+                width={"100%"}
+                height={"auto"}
+                config={{ forceVideo: true }}
+                onProgress={({ played }) => {
+                  const percent = played * 100;
+                  const newProgress: any = Object.assign({}, data.current);
+                  newProgress[name] = percent;
+
+                  // updated in react ctx session for live feedback
+                  set({
+                    current: {
+                      ...newProgress,
+                    },
+                  });
+
+                  // update in localStorage for persistence
+                  let oldValue = progress[slugify(name)];
+                  if (!oldValue || (oldValue && oldValue < percent)) {
+                    progress[slugify(name)] = percent;
+                    setItem("fefa-ocs-progress-course", progress);
                   }
-                }
-              }}
-              onEnded={() => {
-                const completed = data.current.completed || [];
-                completed.push(slugify(lesson.name));
-                set({
-                  current: {
-                    ...data.current,
-                    completed,
-                  },
-                });
-                if (typeof window !== "undefined") {
-                  let values = JSON.parse(
-                    localStorage.getItem("fefa-ocs-completed") ?? "{}"
-                  );
+                }}
+                onEnded={() => {
+                  const completed = data.current.completed || [];
+                  completed.push(slugify(lesson.name));
+
+                  set({
+                    current: {
+                      ...data.current,
+                      completed,
+                    },
+                  });
+
+                  // mark lesson completed
+                  let values = fetchItem("fefa-ocs-completed");
                   let prev = values.completed ?? [];
                   values.completed = [...prev, slugify(lesson.name)];
-                  localStorage.setItem(
-                    "fefa-ocs-completed",
-                    JSON.stringify(values)
-                  );
-                }
-              }}
-            />
-          </div>
+                  setItem("fefa-ocs-completed", values);
+                }}
+              />
+            </div>
+          </>
         );
       }}
     </ContextConsumer>
@@ -97,6 +118,15 @@ export const query = graphql`
       relativePath
       publicURL
       prettySize
+    }
+
+    allFile(
+      filter: { extension: { eq: "mp4" } }
+      sort: { fields: name, order: ASC }
+    ) {
+      nodes {
+        name
+      }
     }
   }
 `;
