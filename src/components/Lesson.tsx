@@ -13,9 +13,12 @@ export default function Lesson({ data }: any) {
     return value;
   };
 
-  let progressData: any = JSON.parse(
-    localStorage.getItem("fefa-ocs-progress-course") ?? "{}"
-  );
+  let progressData: any;
+  if (typeof window !== "undefined") {
+    progressData = JSON.parse(
+      localStorage.getItem("fefa-ocs-progress-course") ?? "{}"
+    );
+  }
 
   return (
     <ContextConsumer>
@@ -36,19 +39,47 @@ export default function Lesson({ data }: any) {
               config={{ forceVideo: true }}
               onProgress={({ played }) => {
                 const name = lesson.name;
+                const obj: any = {};
+                obj[name] = played * 100;
                 set({
-                  progress: {
-                    name,
-                    value: played * 100,
+                  current: {
+                    ...data.current,
+                    ...obj,
                   },
                 });
-                progressData[slugify(name)] = played * 100;
-                localStorage.setItem(
-                  "fefa-ocs-progress-course",
-                  JSON.stringify(progressData)
-                );
+
+                if (typeof window !== "undefined") {
+                  let value = progressData[slugify(name)];
+                  if (!value || (value && value < played * 100)) {
+                    progressData[slugify(name)] = played * 100;
+                    localStorage.setItem(
+                      "fefa-ocs-progress-course",
+                      JSON.stringify(progressData)
+                    );
+                  }
+                }
               }}
-              // onEnded
+              onEnded={() => {
+                const completed = data.current.completed || [];
+                completed.push(slugify(lesson.name));
+                set({
+                  current: {
+                    ...data.current,
+                    completed,
+                  },
+                });
+                if (typeof window !== "undefined") {
+                  let values = JSON.parse(
+                    localStorage.getItem("fefa-ocs-completed") ?? "{}"
+                  );
+                  let prev = values.completed ?? [];
+                  values.completed = [...prev, slugify(lesson.name)];
+                  localStorage.setItem(
+                    "fefa-ocs-completed",
+                    JSON.stringify(values)
+                  );
+                }
+              }}
             />
           </div>
         );
