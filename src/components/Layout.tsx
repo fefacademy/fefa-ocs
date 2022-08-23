@@ -10,8 +10,10 @@ import {
 import { useFefaColorScheme } from "../hooks/styles";
 import { graphql, Link, useStaticQuery, navigate } from "gatsby";
 import {
+  IconCheck,
   IconChevronLeft,
   IconChevronRight,
+  IconCircleCheck,
   IconDeviceDesktop,
   IconSettings,
 } from "@tabler/icons";
@@ -33,14 +35,27 @@ function SectionHeading({ colorScheme, heading }: any) {
 }
 
 function LessonEntry({ lesson, active, colorScheme }: any) {
-  let progressData: any = JSON.parse(
-    localStorage.getItem("fefa-ocs-progress-course") ?? "{}"
-  );
-  const [watched] = useState(progressData[slugify(lesson.name)] || 0);
+  let progressData,
+    done: any = {};
+  if (typeof window !== "undefined") {
+    progressData = JSON.parse(
+      localStorage.getItem("fefa-ocs-progress-course") ?? "{}"
+    );
+    done = JSON.parse(localStorage.getItem("fefa-ocs-completed") ?? "{}");
+  }
+  const [watched] = progressData
+    ? useState(progressData[slugify(lesson.name)] || 0)
+    : useState(0);
+  const isComplete =
+    done.completed && done.completed.includes(slugify(lesson.name));
 
   return (
     <ContextConsumer>
-      {({ data }) => {
+      {({ data, set }) => {
+        const currentVal = data.current[lesson.name];
+        const sessionComplete =
+          data.current.completed &&
+          data.current.completed.includes(slugify(lesson.name));
         return (
           <Link to={`/lesson/${lesson.name}`}>
             <div
@@ -61,29 +76,32 @@ function LessonEntry({ lesson, active, colorScheme }: any) {
                   {refineName(lesson.name)} ({lesson.prettySize})
                 </span>
               </div>
-
-              <RingProgress
-                size={30}
-                thickness={3}
-                roundCaps
-                sections={
-                  watched > 0
-                    ? [
-                        {
-                          color: "teal",
-                          value: Math.round(watched),
-                        },
-                      ]
-                    : data.current.name === lesson.name
-                    ? [
-                        {
-                          color: "teal",
-                          value: Math.round(data.current.value),
-                        },
-                      ]
-                    : []
-                }
-              />
+              {isComplete || sessionComplete ? (
+                <IconCircleCheck size={35} color="teal" />
+              ) : (
+                <RingProgress
+                  size={30}
+                  thickness={3}
+                  roundCaps
+                  sections={
+                    currentVal
+                      ? [
+                          {
+                            color: "teal",
+                            value: Math.round(currentVal),
+                          },
+                        ]
+                      : watched > 0
+                      ? [
+                          {
+                            color: "teal",
+                            value: Math.round(watched),
+                          },
+                        ]
+                      : []
+                  }
+                />
+              )}
             </div>
           </Link>
         );
@@ -121,7 +139,7 @@ export default function Layout(props: any) {
   });
 
   const { colorScheme, toggleColorScheme } = useFefaColorScheme();
-  const [opened, setOpened] = useState(false);
+  const [opened] = useState(false);
   const url = typeof window !== "undefined" ? window.location.href : "";
   const currentLesson = decodeURI(url.split("/")[4]);
   const dark = colorScheme === "dark";
