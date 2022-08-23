@@ -6,3 +6,11 @@
   font-family: "Oxygen";
   src: local("Oxygen"), url(../fonts/Oxygen-Regular.ttf) format("truetype");
 }
+
+.navButton {
+  @apply flex items-center justify-center uppercase p-6 cursor-pointer disabled:opacity-20;
+}
+
+.center {
+  @apply flex items-center justify-center;
+}
