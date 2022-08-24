@@ -1,16 +1,25 @@
 import React from "react";
 
-const defaultContextValue = {
+interface IContextProps {
   data: {
-    current: {},
+    current: any;
+  };
+  set: (data: any) => void;
+}
+
+const defaultContextValue: IContextProps = {
+  data: {
+    current: {
+      completed: [],
+    },
   },
-  set: () => {},
+  set: (data: any) => {},
 };
 
 const { Provider, Consumer } = React.createContext(defaultContextValue);
 
-class ContextProviderComponent extends React.Component {
-  constructor(props: any) {
+class ContextProviderComponent extends React.Component<{}, IContextProps> {
+  constructor(props: { children?: React.ReactNode }) {
     super(props);
 
     this.setData = this.setData.bind(this);
