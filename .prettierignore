@@ -1,5 +1,5 @@
 .cache/
-.public/
+public/
 .husky/
 .devcontainer/
 .vscode/
