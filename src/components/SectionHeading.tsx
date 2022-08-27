@@ -9,7 +9,7 @@ export default function SectionHeading({ heading }: any) {
         colorScheme === "dark" ? "bg-cyan-800" : "bg-blue-200"
       }`}
     >
-      <h5 className="font-bold text-lg">{heading}</h5>
+      <h5 className="font-semibold text-lg tracking-wide">{heading}</h5>
     </div>
   );
 }
