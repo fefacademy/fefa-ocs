@@ -1,6 +1,5 @@
+import { HeadFC } from "gatsby";
 import * as React from "react";
-import { graphql, HeadFC, Link } from "gatsby";
-import Layout from "../components/Layout";
 
 const IndexPage = () => {
   return (
