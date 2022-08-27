@@ -12,14 +12,11 @@ const config: GatsbyConfig = {
   graphqlTypegen: true,
   plugins: [
     "gatsby-plugin-mantine",
-    "gatsby-plugin-theme-ui",
     "gatsby-plugin-postcss",
     "gatsby-plugin-image",
     "gatsby-plugin-mdx",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
-    "gatsby-plugin-ffmpeg",
-    "gatsby-transformer-ffmpeg",
     {
       resolve: "gatsby-plugin-layout",
       options: {
