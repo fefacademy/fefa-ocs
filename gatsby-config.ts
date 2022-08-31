@@ -2,8 +2,9 @@ import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `Fefa OCS`,
-    siteUrl: `https://www.yourdomain.tld`,
+    title: process.env.OCS_TITLE || `Fefa Academy Offline Course Server`,
+    siteUrl: `https://fefaacademy.com`,
+    description: process.env.OCS_COURSE_DESCRIPTION ?? "",
   },
   pathPrefix: "./",
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
