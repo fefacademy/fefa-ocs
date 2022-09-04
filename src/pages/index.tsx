@@ -47,6 +47,7 @@ export const Head: HeadFC = () => {
   return (
     <>
       <title>Fefa Academy | Offline Course Server</title>
+      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     </>
   );
 };
