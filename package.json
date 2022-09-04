@@ -15,7 +15,8 @@
     "clean": "gatsby clean",
     "check:types": "tsc --pretty --noEmit",
     "check:fmt": "prettier --check ./**/*.{js,ts,jsx,tsx}",
-    "format": "prettier --write ./**/*.{js,ts,jsx,tsx}"
+    "format": "prettier --write ./**/*.{js,ts,jsx,tsx}",
+    "prepare": "npx husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",
