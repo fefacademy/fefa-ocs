@@ -5,3 +5,6 @@ src/gatsby-types.d.ts
 static/videos/
 static/lessons/
 todo.*
+yarn-error.log
+*.go
+*.exe
