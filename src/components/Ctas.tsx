@@ -45,7 +45,7 @@ export default function Ctas() {
 
   const items = data.map((d, i) => {
     return (
-      <Anchor href="/">
+      <Anchor href="/" underline={false}>
         <Card style={{ display: "flex" }} key={i}>
           <Group noWrap align={"flex-start"}>
             {d.icon}
@@ -59,5 +59,5 @@ export default function Ctas() {
     );
   });
 
-  return <div className="space-y-6">{items}</div>;
+  return <div className="flex flex-col space-y-8">{items}</div>;
 }
