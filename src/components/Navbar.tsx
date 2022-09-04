@@ -1,4 +1,4 @@
-import { Navbar, Progress, ScrollArea } from "@mantine/core";
+import { Navbar, ScrollArea } from "@mantine/core";
 import { IconSettings } from "@tabler/icons";
 import { Link } from "gatsby";
 import React from "react";
@@ -35,13 +35,6 @@ export default function LessonNavbar({ opened, sections }: any) {
           <h2 className="text-2xl my-4 text-center">
             The Course Title to go here. Descriptive and short
           </h2>
-          <Progress
-            value={30}
-            size="lg"
-            className="w-5/6 mb-4 mx-auto"
-            color={"teal"}
-            radius="xl"
-          />
           {Object.keys(sections).map((name: any) => {
             return (
               <div>
