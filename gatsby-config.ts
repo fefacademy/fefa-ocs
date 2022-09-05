@@ -12,8 +12,8 @@ const config: GatsbyConfig = {
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
-    "gatsby-transformer-remark",
     "gatsby-plugin-mantine",
+    "gatsby-transformer-remark",
     "gatsby-plugin-postcss",
     "gatsby-plugin-image",
     "gatsby-plugin-mdx",
