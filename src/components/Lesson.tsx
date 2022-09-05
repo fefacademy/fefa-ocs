@@ -3,6 +3,7 @@ import {
   Card,
   Group,
   Switch,
+  Text,
   useMantineColorScheme,
 } from "@mantine/core";
 import {
@@ -40,6 +41,10 @@ interface ILessonProps {
         name: string;
       }[];
     };
+
+    markdownRemark: {
+      html: string;
+    };
   };
 }
 
@@ -51,6 +56,11 @@ export default function Lesson({ data }: ILessonProps) {
   const name = lesson.name;
   const sources = data.allFile.nodes;
   const progress = fetchItem("fefa-ocs-progress-course");
+
+  let contents = "";
+  if (data.markdownRemark) {
+    contents = data.markdownRemark.html;
+  }
 
   const handlePlayback = ({ played, data, set }: any) => {
     const percent = played * 100;
@@ -141,12 +151,15 @@ export default function Lesson({ data }: ILessonProps) {
                 <div className="flex items-center justify-between pt-4">
                   <Group>
                     <Switch onLabel="ON" offLabel="OFF" />
-                    <h1>Autoplay</h1>
+                    <Text>Autoplay</Text>
                   </Group>
                   <Button variant="subtle" leftIcon={<IconRefresh />}>
-                    <h1>Reset progress</h1>
+                    <Text>Reset progress</Text>
                   </Button>
                 </div>
+              </Card>
+              <Card>
+                <div dangerouslySetInnerHTML={{ __html: contents }}></div>
               </Card>
             </div>
           </>
@@ -174,6 +187,10 @@ export const query = graphql`
       nodes {
         name
       }
+    }
+
+    markdownRemark(frontmatter: { title: { eq: $name } }) {
+      html
     }
   }
 `;
