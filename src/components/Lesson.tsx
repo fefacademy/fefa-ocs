@@ -6,20 +6,22 @@ import {
   IconRefresh,
 } from "@tabler/icons";
 import { graphql } from "gatsby";
-import ContextConsumer from "lib/context";
-import React from "react";
+import React, { useState } from "react";
 import ReactPlayer from "react-player/file";
 import slugify from "slugify";
+import ContextConsumer from "../lib/context";
+import { useGlobalStyles } from "../lib/shared";
 import {
   fetchItem,
   getLessonIndex,
   navigateToLesson,
   refineName,
   setItem,
-} from "utils";
-import { ILessonProps } from "utils/interfaces";
+} from "../utils";
+import { ILessonProps } from "../utils/interfaces";
 
 export default function Lesson({ data }: ILessonProps) {
+  const { classes } = useGlobalStyles();
   const lesson = data.file;
   const name = lesson.name;
   const sources = data.allFile.nodes;
@@ -29,6 +31,15 @@ export default function Lesson({ data }: ILessonProps) {
   if (data.markdownRemark) {
     contents = data.markdownRemark.html;
   }
+
+  // autoplay functionality
+  const value = Boolean(fetchItem("fefa-ocs-settings").autoplay) ?? false;
+  const [autoplay, setAutoPlay] = useState(value);
+
+  const toggleAutoplay = (value: boolean) => {
+    setAutoPlay(value);
+    setItem("fefa-ocs-settings", { autoplay: value });
+  };
 
   const handlePlayback = ({ played, data, set }: any) => {
     const percent = played * 100;
@@ -66,6 +77,10 @@ export default function Lesson({ data }: ILessonProps) {
     let prev = values.completed ?? [];
     values.completed = [...prev, slugify(lesson.name)];
     setItem("fefa-ocs-completed", values);
+
+    if (autoplay) {
+      navigateToLesson("next", sources);
+    }
   };
 
   return (
@@ -74,9 +89,9 @@ export default function Lesson({ data }: ILessonProps) {
         return (
           <>
             <div className="p-14 flex flex-col space-y-5">
-              <Card radius={"lg"}>
+              <Card radius={"lg"} className={classes.card}>
                 <div className="flex space-x-3 items-center mb-3 justify-between">
-                  <Group>
+                  <Group noWrap>
                     <IconDeviceDesktop size={30} stroke={2} />
                     <h2 className="text-2xl font-medium">
                       {refineName(lesson.name)}
@@ -85,7 +100,7 @@ export default function Lesson({ data }: ILessonProps) {
                   <section className="flex ml-auto">
                     <button
                       disabled={getLessonIndex(sources) === 0}
-                      className="navButton"
+                      className="navButton text-orange-500"
                       onClick={() => navigateToLesson("prev", sources)}
                     >
                       <IconChevronLeft size={20} />
@@ -94,7 +109,7 @@ export default function Lesson({ data }: ILessonProps) {
 
                     <button
                       disabled={getLessonIndex(sources) === sources.length}
-                      className={`navButton text-blue-400`}
+                      className={`navButton text-green-500`}
                       onClick={() => navigateToLesson("next", sources)}
                     >
                       <span>Next</span>
@@ -110,6 +125,7 @@ export default function Lesson({ data }: ILessonProps) {
                     width={"100%"}
                     height={"auto"}
                     config={{ forceVideo: true }}
+                    playing={autoplay}
                     onProgress={({ played }) =>
                       handlePlayback({ played, data, set })
                     }
@@ -118,7 +134,16 @@ export default function Lesson({ data }: ILessonProps) {
                 </Card.Section>
                 <div className="flex items-center justify-between pt-4">
                   <Group>
-                    <Switch onLabel="ON" offLabel="OFF" />
+                    <Switch
+                      onLabel="ON"
+                      offLabel="OFF"
+                      size="md"
+                      color={"orange"}
+                      checked={autoplay}
+                      onChange={(event) =>
+                        toggleAutoplay(event.currentTarget.checked)
+                      }
+                    />
                     <Text>Autoplay</Text>
                   </Group>
                   <Button variant="subtle" leftIcon={<IconRefresh />}>
@@ -139,7 +164,7 @@ export default function Lesson({ data }: ILessonProps) {
 
 export const query = graphql`
   query ($name: String!) {
-    file(name: { eq: $name }) {
+    file(name: { eq: $name }, extension: { eq: "mp4" }) {
       extension
       name
       relativeDirectory
