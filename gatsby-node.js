@@ -19,7 +19,7 @@ exports.createPages = async function ({ actions, graphql }) {
   data.allFile.nodes.forEach((video) => {
     actions.createPage({
       path: `/lesson/${video.name}`,
-      component: path.resolve(`src/components/Lesson.tsx`),
+      component: path.resolve("src/components/Lesson.tsx"),
       context: {
         name: video.name,
       },
