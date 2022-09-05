@@ -1,10 +1,10 @@
 import { RingProgress, useMantineColorScheme } from "@mantine/core";
 import { IconCircleCheck, IconDeviceDesktop } from "@tabler/icons";
 import { Link } from "gatsby";
-import ContextConsumer from "lib/context";
 import React, { useState } from "react";
 import slugify from "slugify";
-import { fetchItem, getCurrentLesson, refineName } from "utils";
+import ContextConsumer from "../lib/context";
+import { fetchItem, getCurrentLesson, refineName } from "../utils";
 
 export default function LessonEntry({ lesson }: any) {
   const { colorScheme } = useMantineColorScheme();
