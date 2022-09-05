@@ -1,5 +1,7 @@
+// eslint-disable-next-line no-undef
 const path = require("path");
 
+// eslint-disable-next-line no-undef
 exports.createPages = async function ({ actions, graphql }) {
   const { data } = await graphql(`
     query {
