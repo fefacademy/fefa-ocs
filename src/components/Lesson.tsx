@@ -24,29 +24,7 @@ import {
   refineName,
   setItem,
 } from "../utils";
-
-interface ILessonProps {
-  data: {
-    file: {
-      extension: string;
-      name: string;
-      relativeDirectory: string;
-      relativePath: string;
-      publicURL: string;
-      prettySize: string;
-    };
-
-    allFile: {
-      nodes: {
-        name: string;
-      }[];
-    };
-
-    markdownRemark: {
-      html: string;
-    };
-  };
-}
+import { ILessonProps } from "../utils/interfaces";
 
 export default function Lesson({ data }: ILessonProps) {
   const { colorScheme } = useMantineColorScheme();
