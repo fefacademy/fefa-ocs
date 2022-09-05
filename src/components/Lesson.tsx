@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  Group,
-  Switch,
-  Text,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Button, Card, Group, Switch, Text } from "@mantine/core";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -13,23 +6,20 @@ import {
   IconRefresh,
 } from "@tabler/icons";
 import { graphql } from "gatsby";
+import ContextConsumer from "lib/context";
 import React from "react";
 import ReactPlayer from "react-player/file";
 import slugify from "slugify";
-import ContextConsumer from "../lib/context";
 import {
   fetchItem,
   getLessonIndex,
   navigateToLesson,
   refineName,
   setItem,
-} from "../utils";
-import { ILessonProps } from "../utils/interfaces";
+} from "utils";
+import { ILessonProps } from "utils/interfaces";
 
 export default function Lesson({ data }: ILessonProps) {
-  const { colorScheme } = useMantineColorScheme();
-  const dark = colorScheme === "dark";
-
   const lesson = data.file;
   const name = lesson.name;
   const sources = data.allFile.nodes;

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { RingProgress, useMantineColorScheme } from "@mantine/core";
 import { IconCircleCheck, IconDeviceDesktop } from "@tabler/icons";
 import { Link } from "gatsby";
-import { fetchItem, getCurrentLesson, refineName } from "../utils";
+import ContextConsumer from "lib/context";
+import React, { useState } from "react";
 import slugify from "slugify";
-import { RingProgress, useMantineColorScheme } from "@mantine/core";
-import ContextConsumer from "../lib/context";
+import { fetchItem, getCurrentLesson, refineName } from "utils";
 
 export default function LessonEntry({ lesson }: any) {
   const { colorScheme } = useMantineColorScheme();
@@ -21,7 +21,7 @@ export default function LessonEntry({ lesson }: any) {
 
   return (
     <ContextConsumer>
-      {({ data, set }) => {
+      {({ data }) => {
         const sessionComplete = data.current.completed ?? [];
         const currentProgress: number = data.current[lesson.name];
         const completedInSession = sessionComplete.includes(
