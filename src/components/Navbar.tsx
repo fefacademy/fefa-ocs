@@ -1,10 +1,10 @@
 import { Navbar, ScrollArea } from "@mantine/core";
-import { IconSettings } from "@tabler/icons";
 import { Link } from "gatsby";
 import React from "react";
 import { getCurrentLesson } from "../utils";
 import LessonEntry from "./LessonEntry";
 import SectionHeading from "./SectionHeading";
+import ThemeButton from "./ThemeButton";
 
 export default function LessonNavbar({ opened, sections }: any) {
   return (
@@ -26,9 +26,7 @@ export default function LessonNavbar({ opened, sections }: any) {
             height={40}
           />
         </Link>
-        <Link to="/settings">
-          <IconSettings size={30} />
-        </Link>
+        <ThemeButton />
       </Navbar.Section>
       <ScrollArea>
         <div className="flex flex-col">
