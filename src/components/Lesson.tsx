@@ -41,6 +41,7 @@ export default function Lesson({ data }: ILessonProps) {
     setItem("fefa-ocs-settings", { autoplay: value });
   };
 
+  // updated progress ring functionality
   const handlePlayback = ({ played, data, set }: any) => {
     const percent = played * 100;
     const newProgress: any = Object.assign({}, data.current);
@@ -61,6 +62,7 @@ export default function Lesson({ data }: ILessonProps) {
     }
   };
 
+  // save completed lesson history
   const handleCompleted = ({ data, set }: any) => {
     const completed = data.current.completed || [];
     completed.push(slugify(lesson.name));
@@ -87,75 +89,73 @@ export default function Lesson({ data }: ILessonProps) {
     <ContextConsumer>
       {({ data, set }) => {
         return (
-          <>
-            <div className="p-14 flex flex-col space-y-5">
-              <Card radius={"lg"} className={classes.card}>
-                <div className="flex space-x-3 items-center mb-3 justify-between">
-                  <Group noWrap>
-                    <IconDeviceDesktop size={30} stroke={2} />
-                    <h2 className="text-2xl font-medium">
-                      {refineName(lesson.name)}
-                    </h2>
-                  </Group>
-                  <section className="flex ml-auto">
-                    <button
-                      disabled={getLessonIndex(sources) === 0}
-                      className="navButton text-orange-500"
-                      onClick={() => navigateToLesson("prev", sources)}
-                    >
-                      <IconChevronLeft size={20} />
-                      <span>Previous</span>
-                    </button>
+          <div className="p-14 flex flex-col space-y-5">
+            <Card radius={"lg"} className={classes.card}>
+              <div className="flex space-x-3 items-center mb-3 justify-between">
+                <Group noWrap>
+                  <IconDeviceDesktop size={30} stroke={2} />
+                  <h2 className="text-2xl font-medium">
+                    {refineName(lesson.name)}
+                  </h2>
+                </Group>
+                <section className="flex ml-auto">
+                  <button
+                    disabled={getLessonIndex(sources) === 0}
+                    className="navButton text-orange-500"
+                    onClick={() => navigateToLesson("prev", sources)}
+                  >
+                    <IconChevronLeft size={20} />
+                    <span>Previous</span>
+                  </button>
 
-                    <button
-                      disabled={getLessonIndex(sources) === sources.length}
-                      className={`navButton text-green-500`}
-                      onClick={() => navigateToLesson("next", sources)}
-                    >
-                      <span>Next</span>
-                      <IconChevronRight size={20} />
-                    </button>
-                  </section>
-                </div>
-                <Card.Section>
-                  <ReactPlayer
-                    controls
-                    url={lesson.publicURL}
-                    progressInterval={5000}
-                    width={"100%"}
-                    height={"auto"}
-                    config={{ forceVideo: true }}
-                    playing={autoplay}
-                    onProgress={({ played }) =>
-                      handlePlayback({ played, data, set })
+                  <button
+                    disabled={getLessonIndex(sources) === sources.length}
+                    className={`navButton text-green-500`}
+                    onClick={() => navigateToLesson("next", sources)}
+                  >
+                    <span>Next</span>
+                    <IconChevronRight size={20} />
+                  </button>
+                </section>
+              </div>
+              <Card.Section>
+                <ReactPlayer
+                  controls
+                  url={lesson.publicURL}
+                  progressInterval={5000}
+                  width={"100%"}
+                  height={"auto"}
+                  config={{ forceVideo: true }}
+                  playing={autoplay}
+                  onProgress={({ played }) =>
+                    handlePlayback({ played, data, set })
+                  }
+                  onEnded={() => handleCompleted({ data, set })}
+                />
+              </Card.Section>
+              <div className="flex items-center justify-between pt-4">
+                <Group>
+                  <Switch
+                    onLabel="ON"
+                    offLabel="OFF"
+                    size="md"
+                    color={"orange"}
+                    checked={autoplay}
+                    onChange={(event) =>
+                      toggleAutoplay(event.currentTarget.checked)
                     }
-                    onEnded={() => handleCompleted({ data, set })}
                   />
-                </Card.Section>
-                <div className="flex items-center justify-between pt-4">
-                  <Group>
-                    <Switch
-                      onLabel="ON"
-                      offLabel="OFF"
-                      size="md"
-                      color={"orange"}
-                      checked={autoplay}
-                      onChange={(event) =>
-                        toggleAutoplay(event.currentTarget.checked)
-                      }
-                    />
-                    <Text>Autoplay</Text>
-                  </Group>
-                  <Button variant="subtle" leftIcon={<IconRefresh />}>
-                    <Text>Reset progress</Text>
-                  </Button>
-                </div>
-              </Card>
-              <Card>
-                <div dangerouslySetInnerHTML={{ __html: contents }}></div>
-              </Card>
-            </div>
-          </>
+                  <Text>Autoplay</Text>
+                </Group>
+                <Button variant="subtle" leftIcon={<IconRefresh />}>
+                  <Text>Reset progress</Text>
+                </Button>
+              </div>
+            </Card>
+            <Card>
+              <div dangerouslySetInnerHTML={{ __html: contents }}></div>
+            </Card>
+          </div>
         );
       }}
     </ContextConsumer>
