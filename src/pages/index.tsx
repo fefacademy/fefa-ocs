@@ -3,8 +3,11 @@ import { HeadFC } from "gatsby";
 import * as React from "react";
 import CommunityLinks from "../components/CommunityLinks";
 import Ctas from "../components/Ctas";
+import { useGlobalStyles } from "../lib/shared";
 
 const IndexPage = () => {
+  const { classes } = useGlobalStyles();
+
   return (
     <div className="w-full h-full p-10 py-14">
       <h1 className="text-4xl font-medium mb-5">⚓ Ahoy, Kemosabe 👋</h1>
@@ -25,7 +28,7 @@ const IndexPage = () => {
           <Ctas />
         </div>
         <div className="w-1/3">
-          <Card>
+          <Card className={classes.card}>
             <Text className="text-xl mb-3 font-medium">
               Join the Fefa Family
             </Text>

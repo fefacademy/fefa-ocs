@@ -7,8 +7,10 @@ import {
   IconDeviceTv,
 } from "@tabler/icons";
 import React from "react";
+import { useGlobalStyles } from "../lib/shared";
 
 export default function Ctas() {
+  const { classes } = useGlobalStyles();
   const size = 45;
   const data = [
     {
@@ -46,7 +48,7 @@ export default function Ctas() {
   const items = data.map((d, i) => {
     return (
       <Anchor href="/" underline={false}>
-        <Card style={{ display: "flex" }} key={i}>
+        <Card style={{ display: "flex" }} key={i} className={classes.card}>
           <Group noWrap align={"flex-start"}>
             {d.icon}
             <div>
@@ -59,5 +61,5 @@ export default function Ctas() {
     );
   });
 
-  return <div className="flex flex-col space-y-8">{items}</div>;
+  return <div className="flex flex-col space-y-5">{items}</div>;
 }
