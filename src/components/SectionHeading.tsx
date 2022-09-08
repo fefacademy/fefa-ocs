@@ -1,5 +1,7 @@
-import { useMantineColorScheme } from "@mantine/core";
+import { Group, useMantineColorScheme } from "@mantine/core";
+import { IconFolder } from "@tabler/icons";
 import React from "react";
+import { refineName } from "../utils";
 
 export default function SectionHeading({ heading }: any) {
   const { colorScheme } = useMantineColorScheme();
@@ -9,7 +11,12 @@ export default function SectionHeading({ heading }: any) {
         colorScheme === "dark" ? "bg-cyan-800" : "bg-blue-200"
       }`}
     >
-      <h5 className="font-semibold text-lg tracking-wide">{heading}</h5>
+      <Group noWrap spacing={"xs"}>
+        <IconFolder />
+        <h5 className="font-['Oxygen_Bold'] text-lg tracking-wide">
+          {refineName(heading)}
+        </h5>
+      </Group>
     </div>
   );
 }
