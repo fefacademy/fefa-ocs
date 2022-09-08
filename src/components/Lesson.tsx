@@ -6,7 +6,7 @@ import {
   IconRefresh,
 } from "@tabler/icons";
 import { graphql, HeadFC } from "gatsby";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player/file";
 import slugify from "slugify";
 import ContextConsumer from "../lib/context";
@@ -31,6 +31,15 @@ export default function Lesson({ data }: ILessonProps) {
   if (data.markdownRemark) {
     contents = data.markdownRemark.html;
   }
+
+  const videoRef = useRef<ReactPlayer>(null);
+  const handleStart = () => {
+    // check if has last play time
+    if (progress[slugify(name)]) {
+      const val = Number(progress[slugify(name)]) / 100;
+      videoRef.current?.seekTo(val, "fraction");
+    }
+  };
 
   // autoplay functionality
   const value = Boolean(fetchItem("fefa-ocs-settings").autoplay) ?? false;
@@ -120,6 +129,7 @@ export default function Lesson({ data }: ILessonProps) {
               </div>
               <Card.Section>
                 <ReactPlayer
+                  ref={videoRef}
                   controls
                   url={lesson.publicURL}
                   progressInterval={5000}
@@ -127,6 +137,7 @@ export default function Lesson({ data }: ILessonProps) {
                   height={"auto"}
                   config={{ forceVideo: true }}
                   playing={autoplay}
+                  onStart={handleStart}
                   onProgress={({ played }) =>
                     handlePlayback({ played, data, set })
                   }
