@@ -4,7 +4,13 @@
 
 @font-face {
   font-family: "Oxygen";
-  src: local("Oxygen"), url(../fonts/Oxygen-Regular.ttf) format("truetype");
+  src: url(../../static/fonts/Oxygen-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Oxygen Bold";
+  font-weight: 900;
+  src: url(../../static/fonts/Oxygen-Bold.ttf) format("truetype");
 }
 
 .navButton {
