@@ -1,10 +1,11 @@
-import { RingProgress, useMantineColorScheme } from "@mantine/core";
-import { IconCircleCheck, IconDeviceDesktop } from "@tabler/icons";
+import { Text, useMantineColorScheme } from "@mantine/core";
+import { IconCircleCheck } from "@tabler/icons";
 import { Link } from "gatsby";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import slugify from "slugify";
 import ContextConsumer from "../lib/context";
 import { fetchItem, getCurrentLesson, refineName } from "../utils";
+import Progress from "./Progress";
 
 export default function LessonEntry({ lesson }: any) {
   const { colorScheme } = useMantineColorScheme();
@@ -18,6 +19,22 @@ export default function LessonEntry({ lesson }: any) {
   const [watched] = useState(
     progress ? progress[slugify(lesson.name)] || 0 : 0
   );
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [duration, setDuration] = useState("00:00");
+
+  const handleMetadata = () => {
+    let value = videoRef.current!.duration; // in seconds
+    const mins = Math.floor(value / 60);
+    const secs = Math.floor(value % 60);
+
+    // Prettify values
+    const p = (val: number): string => {
+      if (val < 10) return `0${val}`;
+      return `${val}`;
+    };
+
+    setDuration(`${mins}:${p(secs)}`);
+  };
 
   return (
     <ContextConsumer>
@@ -43,38 +60,29 @@ export default function LessonEntry({ lesson }: any) {
               }`}
             >
               <div className="flex items-center space-x-3 w-full">
-                <IconDeviceDesktop size={20} stroke={2} />
+                {isComplete || completedInSession ? (
+                  <IconCircleCheck size={30} color="teal" />
+                ) : (
+                  <Progress
+                    currentProgress={currentProgress}
+                    watched={watched}
+                  />
+                )}
                 <span className="w-2/3 text-ellipsis">
-                  {refineName(lesson.name)} ({lesson.prettySize})
+                  {refineName(lesson.name)}
                 </span>
               </div>
-              {isComplete || completedInSession ? (
-                <IconCircleCheck size={33} color="teal" />
-              ) : (
-                <RingProgress
-                  size={30}
-                  thickness={3}
-                  roundCaps
-                  sections={
-                    currentProgress
-                      ? [
-                          {
-                            color: "teal",
-                            value: Math.round(currentProgress),
-                          },
-                        ]
-                      : watched > 0
-                      ? [
-                          {
-                            color: "teal",
-                            value: Math.round(watched),
-                          },
-                        ]
-                      : []
-                  }
-                />
-              )}
+              <Text color={"dimmed"} mr="xs">
+                {duration}
+              </Text>
             </div>
+            {/* empty target to get duration */}
+            <video
+              className="hidden w-0 h-0"
+              src={lesson.publicURL}
+              ref={videoRef}
+              onLoadedMetadata={handleMetadata}
+            ></video>
           </Link>
         );
       }}

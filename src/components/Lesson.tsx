@@ -5,7 +5,7 @@ import {
   IconDeviceDesktop,
   IconRefresh,
 } from "@tabler/icons";
-import { graphql } from "gatsby";
+import { graphql, HeadFC } from "gatsby";
 import React, { useState } from "react";
 import ReactPlayer from "react-player/file";
 import slugify from "slugify";
@@ -161,6 +161,15 @@ export default function Lesson({ data }: ILessonProps) {
     </ContextConsumer>
   );
 }
+
+export const Head: HeadFC = () => {
+  return (
+    <>
+      <title>Fefa Academy | Offline Course Server</title>
+      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    </>
+  );
+};
 
 export const query = graphql`
   query ($name: String!) {
