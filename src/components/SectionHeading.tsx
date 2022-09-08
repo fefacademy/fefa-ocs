@@ -12,7 +12,7 @@ export default function SectionHeading({ heading }: any) {
       }`}
     >
       <Group noWrap spacing={"xs"}>
-        <IconFolder />
+        <IconFolder stroke={2} />
         <h5 className="font-['Oxygen_Bold'] text-lg tracking-wide">
           {refineName(heading)}
         </h5>
