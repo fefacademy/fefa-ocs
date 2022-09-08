@@ -30,11 +30,6 @@ export default function Ctas() {
     },
     {
       icon: <IconDeviceTv size={size} className="text-teal-400" />,
-      title: "Donate",
-      body: "Contribute to our cause and help us grow by making a donation.",
-    },
-    {
-      icon: <IconCash size={size} className="text-green-400" />,
       title: "Moree please...",
       body: "View more courses on the Fefa website.",
     },
