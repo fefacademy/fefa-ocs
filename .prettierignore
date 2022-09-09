@@ -3,3 +3,4 @@ public/
 .husky/
 .devcontainer/
 .vscode/
+*.d.ts
