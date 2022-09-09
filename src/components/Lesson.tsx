@@ -1,9 +1,5 @@
 import { Card, Group, Select, Switch, Text } from "@mantine/core";
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconDeviceDesktop,
-} from "@tabler/icons";
+import { IconDeviceDesktop } from "@tabler/icons";
 import { graphql, HeadFC } from "gatsby";
 import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player/file";
@@ -12,12 +8,13 @@ import ContextConsumer from "../lib/context";
 import { useGlobalStyles } from "../lib/shared";
 import {
   fetchItem,
-  getLessonIndex,
-  navigateToLesson,
+  getSettingValue,
   refineName,
-  setItem,
+  updateSettings,
 } from "../utils";
 import { ILessonProps } from "../utils/interfaces";
+import { handleLessonCompleted, handleLessonPlayback } from "../utils/player";
+import LessonNavigation from "./LessonNavigation";
 
 export default function Lesson({ data }: ILessonProps) {
   const { classes } = useGlobalStyles();
@@ -26,90 +23,43 @@ export default function Lesson({ data }: ILessonProps) {
   const sources = data.allFile.nodes;
   const progress = fetchItem("fefa-ocs-progress-course");
 
-  let contents = "";
-  if (data.markdownRemark) {
-    contents = data.markdownRemark.html;
-  }
-
-  const initial = fetchItem("fefa-ocs-settings").playback ?? "resume";
-  const [playback, setPlayback] = useState(initial);
+  // Video playback functionality
+  const pbCurrent = getSettingValue("playback");
+  const [playback, setPlayback] = useState(pbCurrent);
   const videoRef = useRef<ReactPlayer>(null);
   const handleStart = () => {
-    const shouldResume = playback === "resume";
-
-    // check if has last play time
     // TODO: Create false loading sense
-    if (progress[slugify(name)] && shouldResume) {
+    if (progress[slugify(name)] && playback === "resume") {
       const val = Number(progress[slugify(name)]) / 100;
       videoRef.current?.seekTo(val, "fraction");
     }
   };
 
-  const handlePlaybackSettings = (value: string) => {
+  const togglePlaybackSetting = (value: string) => {
     setPlayback(value);
-    setItem("fefa-ocs-settings", {
-      ...fetchItem("fefa-ocs-settings"),
-      playback: value,
-    });
+    updateSettings({ playback: value });
   };
 
   // autoplay functionality
-  const value = Boolean(fetchItem("fefa-ocs-settings").autoplay) ?? false;
-  const [autoplay, setAutoPlay] = useState(value);
+  const apCurrent = getSettingValue("autoplay");
+  const [autoplay, setAutoPlay] = useState(apCurrent);
 
   const toggleAutoplay = (value: boolean) => {
     setAutoPlay(value);
-    let settings = fetchItem("fefa-ocs-settings");
-    setItem("fefa-ocs-settings", { ...settings, autoplay: value });
-  };
-
-  // updated progress ring functionality
-  const handlePlayback = ({ played, data, set }: any) => {
-    const percent = played * 100;
-    const newProgress: any = Object.assign({}, data.current);
-    newProgress[name] = percent;
-
-    // updated in react ctx session for live feedback
-    set({
-      current: {
-        ...newProgress,
-      },
-    });
-
-    // update in localStorage for persistence
-    let oldValue = progress[slugify(name)];
-    if (!oldValue || (oldValue && oldValue < percent)) {
-      progress[slugify(name)] = percent;
-      setItem("fefa-ocs-progress-course", progress);
-    }
-  };
-
-  // save completed lesson history
-  const handleCompleted = ({ data, set }: any) => {
-    const completed = data.current.completed || [];
-    completed.push(slugify(lesson.name));
-
-    set({
-      current: {
-        ...data.current,
-        completed,
-      },
-    });
-
-    // mark lesson completed
-    let values = fetchItem("fefa-ocs-completed");
-    let prev = values.completed ?? [];
-    values.completed = [...prev, slugify(lesson.name)];
-    setItem("fefa-ocs-completed", values);
-
-    if (autoplay) {
-      navigateToLesson("next", sources);
-    }
+    updateSettings({ autoplay: value });
   };
 
   return (
     <ContextConsumer>
       {({ data, set }) => {
+        const listenerData = {
+          data,
+          set,
+          autoplay,
+          name,
+          progress,
+          sources,
+        };
         return (
           <div className="p-14 flex flex-col space-y-5">
             <Card radius={"lg"} className={classes.card}>
@@ -120,25 +70,7 @@ export default function Lesson({ data }: ILessonProps) {
                     {refineName(lesson.name)}
                   </h2>
                 </Group>
-                <section className="flex ml-auto">
-                  <button
-                    disabled={getLessonIndex(sources) === 0}
-                    className="navButton text-orange-500"
-                    onClick={() => navigateToLesson("prev", sources)}
-                  >
-                    <IconChevronLeft size={20} />
-                    <span>Previous</span>
-                  </button>
-
-                  <button
-                    disabled={getLessonIndex(sources) === sources.length}
-                    className={`navButton text-green-500`}
-                    onClick={() => navigateToLesson("next", sources)}
-                  >
-                    <span>Next</span>
-                    <IconChevronRight size={20} />
-                  </button>
-                </section>
+                <LessonNavigation sources={sources} />
               </div>
               <Card.Section>
                 <ReactPlayer
@@ -152,9 +84,17 @@ export default function Lesson({ data }: ILessonProps) {
                   playing={autoplay}
                   onStart={handleStart}
                   onProgress={({ played }) =>
-                    handlePlayback({ played, data, set })
+                    handleLessonPlayback({
+                      ...listenerData,
+                      played,
+                    })
                   }
-                  onEnded={() => handleCompleted({ data, set })}
+                  onEnded={() =>
+                    handleLessonCompleted({
+                      ...listenerData,
+                      played: 0,
+                    })
+                  }
                 />
               </Card.Section>
               <div className="flex items-center justify-between pt-4">
@@ -175,7 +115,7 @@ export default function Lesson({ data }: ILessonProps) {
                   <Text>Playback settings:</Text>
                   <Select
                     value={playback}
-                    onChange={handlePlaybackSettings}
+                    onChange={togglePlaybackSetting}
                     data={[
                       { value: "resume", label: "Resume from last time" },
                       { value: "restart", label: "Start from beginning" },
@@ -183,9 +123,6 @@ export default function Lesson({ data }: ILessonProps) {
                   />
                 </Group>
               </div>
-            </Card>
-            <Card>
-              <div dangerouslySetInnerHTML={{ __html: contents }}></div>
             </Card>
           </div>
         );
@@ -198,7 +135,6 @@ export const Head: HeadFC = () => {
   return (
     <>
       <title>Fefa Academy | Offline Course Server</title>
-      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     </>
   );
 };
