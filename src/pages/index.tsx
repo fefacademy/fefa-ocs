@@ -1,8 +1,8 @@
 import { Anchor, Card, Text } from "@mantine/core";
 import { HeadFC } from "gatsby";
 import * as React from "react";
-import SocialLinks from "../components/CommunityLinks";
 import Ctas from "../components/Ctas";
+import SocialLinks from "../components/SocialLinks";
 import { useGlobalStyles } from "../lib/shared";
 
 const IndexPage = () => {
