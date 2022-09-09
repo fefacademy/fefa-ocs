@@ -1,7 +1,7 @@
 import { Anchor, Card, Text } from "@mantine/core";
 import { HeadFC } from "gatsby";
 import * as React from "react";
-import CommunityLinks from "../components/CommunityLinks";
+import SocialLinks from "../components/CommunityLinks";
 import Ctas from "../components/Ctas";
 import { useGlobalStyles } from "../lib/shared";
 
@@ -39,7 +39,7 @@ const IndexPage = () => {
               Make new friends, find a study-buddy, connect with others and much
               more in the Fefa community
             </Text>
-            <CommunityLinks />
+            <SocialLinks />
           </Card>
         </div>
       </section>

@@ -8,7 +8,7 @@ import {
 } from "@tabler/icons";
 import React from "react";
 
-export default function CommunityLinks() {
+export default function SocialLinks() {
   const size = 30;
   const data = [
     {
