@@ -1,7 +1,6 @@
 import { ActionIcon, useMantineColorScheme } from "@mantine/core";
-import { MoonIcon, SunIcon } from "@modulz/radix-icons";
+import { IconMoon, IconSun } from "@tabler/icons";
 import React from "react";
-import { IconSun, IconMoon } from "@tabler/icons";
 
 const ThemeButton = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
