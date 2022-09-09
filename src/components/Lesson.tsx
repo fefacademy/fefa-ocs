@@ -1,9 +1,8 @@
-import { Button, Card, Group, Switch, Text } from "@mantine/core";
+import { Card, Group, Select, Switch, Text } from "@mantine/core";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconDeviceDesktop,
-  IconRefresh,
 } from "@tabler/icons";
 import { graphql, HeadFC } from "gatsby";
 import React, { useRef, useState } from "react";
@@ -32,13 +31,26 @@ export default function Lesson({ data }: ILessonProps) {
     contents = data.markdownRemark.html;
   }
 
+  const initial = fetchItem("fefa-ocs-settings").playback ?? "resume";
+  const [playback, setPlayback] = useState(initial);
   const videoRef = useRef<ReactPlayer>(null);
   const handleStart = () => {
+    const shouldResume = playback === "resume";
+
     // check if has last play time
-    if (progress[slugify(name)]) {
+    // TODO: Create false loading sense
+    if (progress[slugify(name)] && shouldResume) {
       const val = Number(progress[slugify(name)]) / 100;
       videoRef.current?.seekTo(val, "fraction");
     }
+  };
+
+  const handlePlaybackSettings = (value: string) => {
+    setPlayback(value);
+    setItem("fefa-ocs-settings", {
+      ...fetchItem("fefa-ocs-settings"),
+      playback: value,
+    });
   };
 
   // autoplay functionality
@@ -47,7 +59,8 @@ export default function Lesson({ data }: ILessonProps) {
 
   const toggleAutoplay = (value: boolean) => {
     setAutoPlay(value);
-    setItem("fefa-ocs-settings", { autoplay: value });
+    let settings = fetchItem("fefa-ocs-settings");
+    setItem("fefa-ocs-settings", { ...settings, autoplay: value });
   };
 
   // updated progress ring functionality
@@ -158,9 +171,17 @@ export default function Lesson({ data }: ILessonProps) {
                   />
                   <Text>Autoplay</Text>
                 </Group>
-                <Button variant="subtle" leftIcon={<IconRefresh />}>
-                  <Text>Reset progress</Text>
-                </Button>
+                <Group>
+                  <Text>Playback settings:</Text>
+                  <Select
+                    value={playback}
+                    onChange={handlePlaybackSettings}
+                    data={[
+                      { value: "resume", label: "Resume from last time" },
+                      { value: "restart", label: "Start from beginning" },
+                    ]}
+                  />
+                </Group>
               </div>
             </Card>
             <Card>
