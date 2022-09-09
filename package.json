@@ -13,10 +13,10 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "lint": "eslint",
+    "lint": "eslint .",
     "check:types": "tsc --pretty --noEmit",
     "check:fmt": "prettier --check ./**/*.{js,ts,jsx,tsx}",
-    "format": "prettier --write ./**/*.{js,ts,jsx,tsx}",
+    "fmt": "prettier --write ./**/*.{js,ts,jsx,tsx}",
     "prepare": "npx husky install"
   },
   "dependencies": {
