@@ -56,3 +56,17 @@ export function setItem(key: string, value: any) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 }
+
+export function updateSettings(value: any) {
+  let settings = fetchItem("fefa-ocs-settings");
+  setItem("fefa-ocs-settings", { ...settings, ...value });
+}
+
+export function getSettingValue(value: string) {
+  const settings = fetchItem("fefa-ocs-settings");
+  if (value === "autoplay") {
+    return Boolean(settings.autoplay) ?? false;
+  } else if (value === "playback") {
+    return settings.playback ?? "resume";
+  }
+}
