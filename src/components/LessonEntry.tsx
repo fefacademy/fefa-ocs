@@ -3,16 +3,15 @@ import { IconCircleCheck } from "@tabler/icons";
 import { Link } from "gatsby";
 import React, { useRef, useState } from "react";
 import slugify from "slugify";
+import { useCourseProgress } from "../hooks/progress";
 import ContextConsumer from "../lib/context";
-import { fetchItem, getCurrentLesson, refineName } from "../utils";
+import { getCurrentLesson, refineName } from "../utils";
 import Progress from "./Progress";
 
 export default function LessonEntry({ lesson }: any) {
   const { colorScheme } = useMantineColorScheme();
+  const { progress, completed: archived } = useCourseProgress();
   const isActive = getCurrentLesson() === lesson.name;
-
-  const archived = fetchItem("fefa-ocs-completed");
-  const progress = fetchItem("fefa-ocs-progress-course");
   const completed = archived.completed ?? [];
   const isComplete = completed.includes(slugify(lesson.name));
 
