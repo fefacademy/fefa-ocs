@@ -46,7 +46,7 @@ export default function LessonEntry({ lesson }: any) {
         );
 
         return (
-          <Link to={`/lesson/${lesson.name}`}>
+          <Link to={`/lesson/${slugify(lesson.name)}`}>
             <div
               className={`w-full flex items-center justify-between  p-3 ${
                 colorScheme === "dark"

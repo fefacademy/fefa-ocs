@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-undef
 const path = require("path");
+// eslint-disable-next-line no-undef
+const { default: slugify } = require("slugify");
 
 // eslint-disable-next-line no-undef
 exports.createPages = async function ({ actions, graphql }) {
@@ -15,7 +17,7 @@ exports.createPages = async function ({ actions, graphql }) {
 
   data.allFile.nodes.forEach((node) => {
     actions.createPage({
-      path: `/lesson/${node.name}`,
+      path: `/lesson/${slugify(node.name)}`,
       component: path.resolve("src/components/Lesson.tsx"),
       context: {
         name: node.name,
