@@ -19,6 +19,10 @@ export interface ILessonProps {
       body: string;
       frontmatter: any;
     };
+
+    site: {
+      siteMetadata: any;
+    };
   };
   children: any;
 }
