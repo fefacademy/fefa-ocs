@@ -5,6 +5,7 @@ const config: GatsbyConfig = {
     title: process.env.OCS_TITLE || `Fefa Academy Offline Course Server`,
     siteUrl: `https://fefaacademy.com`,
     description: process.env.OCS_COURSE_DESCRIPTION ?? "",
+    courseID: process.env.OCS_COURSE_ID || "sLru_gfm_10",
   },
   pathPrefix: "./",
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
