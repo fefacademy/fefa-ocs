@@ -22,7 +22,8 @@ export default function Lesson({ data }: ILessonProps) {
   const lesson = data.file;
   const name = lesson.name;
   const sources = data.allFile.nodes;
-  const progress = fetchItem("fefa-ocs-progress-course");
+  const courseID = data.site.siteMetadata.courseID;
+  const progress = fetchItem(`fefa-ocs-${courseID}-progress`);
 
   let mdxBody: string;
   const hasMdx = data.mdx ? true : false;
@@ -67,6 +68,7 @@ export default function Lesson({ data }: ILessonProps) {
           name,
           progress,
           sources,
+          courseID,
         };
         return (
           <div className="p-14 flex flex-col space-y-5">
@@ -179,6 +181,12 @@ export const query = graphql`
         title
       }
       body
+    }
+
+    site {
+      siteMetadata {
+        courseID
+      }
     }
   }
 `;
