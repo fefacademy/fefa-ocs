@@ -1,6 +1,7 @@
 import { Card, Group, Select, Switch, Text } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons";
 import { graphql, HeadFC } from "gatsby";
+import { MDXRenderer } from "gatsby-plugin-mdx";
 import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player/file";
 import slugify from "slugify";
@@ -22,6 +23,13 @@ export default function Lesson({ data }: ILessonProps) {
   const name = lesson.name;
   const sources = data.allFile.nodes;
   const progress = fetchItem("fefa-ocs-progress-course");
+
+  let mdxBody: string;
+  const hasMdx = data.mdx ? true : false;
+  if (hasMdx) {
+    const { body } = data.mdx;
+    mdxBody = body;
+  }
 
   // Video playback functionality
   const pbCurrent = getSettingValue("playback");
@@ -124,6 +132,11 @@ export default function Lesson({ data }: ILessonProps) {
                 </Group>
               </div>
             </Card>
+            {hasMdx && (
+              <Card>
+                <MDXRenderer>{mdxBody}</MDXRenderer>
+              </Card>
+            )}
           </div>
         );
       }}
@@ -159,8 +172,13 @@ export const query = graphql`
       }
     }
 
-    markdownRemark(frontmatter: { title: { eq: $name } }) {
-      html
+    mdx(frontmatter: { name: { eq: $name } }) {
+      frontmatter {
+        links
+        name
+        title
+      }
+      body
     }
   }
 `;
