@@ -15,8 +15,10 @@ export interface ILessonProps {
       }[];
     };
 
-    markdownRemark: {
-      html: string;
+    mdx: {
+      body: string;
+      frontmatter: any;
     };
   };
+  children: any;
 }
