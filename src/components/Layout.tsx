@@ -1,6 +1,6 @@
 import { AppShell, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import React, { useState } from "react";
-import { useLessonSources } from "../hooks/data";
+import { useLessonSources } from "../hooks/lessons";
 import { useFefaColorScheme } from "../hooks/styles";
 import { ContextProviderComponent } from "../lib/context";
 import MdxProvider from "./MdxProvider";
