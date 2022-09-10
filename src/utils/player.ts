@@ -9,10 +9,11 @@ interface IListenersProps {
   autoplay: boolean;
   progress: any;
   played: number;
+  courseID: string;
 }
 
 export const handleLessonCompleted = (props: IListenersProps) => {
-  const { data, set, sources, name, autoplay } = props;
+  const { data, set, sources, name, autoplay, courseID } = props;
   const completed = data.current.completed || [];
   completed.push(slugify(name));
 
@@ -24,10 +25,10 @@ export const handleLessonCompleted = (props: IListenersProps) => {
   });
 
   // mark lesson completed
-  let values = fetchItem("fefa-ocs-completed");
+  let values = fetchItem(`fefa-ocs-${courseID}-completed`);
   let prev = values.completed ?? [];
   values.completed = [...prev, slugify(name)];
-  setItem("fefa-ocs-completed", values);
+  setItem(`fefa-ocs-${courseID}-completed`, values);
 
   if (autoplay) {
     navigateToLesson("next", sources);
@@ -35,7 +36,7 @@ export const handleLessonCompleted = (props: IListenersProps) => {
 };
 
 export const handleLessonPlayback = (props: IListenersProps) => {
-  const { played, data, set, name, progress } = props;
+  const { played, data, set, name, progress, courseID } = props;
   const percent = played * 100;
   const newProgress: any = Object.assign({}, data.current);
   newProgress[name] = percent;
@@ -51,6 +52,6 @@ export const handleLessonPlayback = (props: IListenersProps) => {
   let oldValue = progress[slugify(name)];
   if (!oldValue || (oldValue && oldValue < percent)) {
     progress[slugify(name)] = percent;
-    setItem("fefa-ocs-progress-course", progress);
+    setItem(`fefa-ocs-${courseID}-progress`, progress);
   }
 };
