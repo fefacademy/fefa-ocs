@@ -7,23 +7,18 @@ exports.createPages = async function ({ actions, graphql }) {
     query {
       allFile(filter: { extension: { eq: "mp4" } }) {
         nodes {
-          extension
           name
-          relativeDirectory
-          relativePath
-          publicURL
-          prettySize
         }
       }
     }
   `);
 
-  data.allFile.nodes.forEach((video) => {
+  data.allFile.nodes.forEach((node) => {
     actions.createPage({
-      path: `/lesson/${video.name}`,
+      path: `/lesson/${node.name}`,
       component: path.resolve("src/components/Lesson.tsx"),
       context: {
-        name: video.name,
+        name: node.name,
       },
     });
   });
