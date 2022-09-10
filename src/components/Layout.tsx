@@ -1,9 +1,10 @@
+import { AppShell, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import React, { useState } from "react";
-import { AppShell, MantineProvider, ColorSchemeProvider } from "@mantine/core";
+import { useLessonSources } from "../hooks/data";
 import { useFefaColorScheme } from "../hooks/styles";
 import { ContextProviderComponent } from "../lib/context";
+import MdxProvider from "./MdxProvider";
 import LessonNavbar from "./Navbar";
-import { useLessonSources } from "../hooks/data";
 
 export default function Layout(props: any) {
   const [opened] = useState(false);
@@ -31,7 +32,7 @@ export default function Layout(props: any) {
             padding={0}
             navbar={<LessonNavbar sections={sections} opened={opened} />}
           >
-            {props.children}
+            <MdxProvider>{props.children}</MdxProvider>
           </AppShell>
         </MantineProvider>
       </ColorSchemeProvider>
