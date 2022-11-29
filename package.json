@@ -63,7 +63,7 @@
     "autoprefixer": "^10.4.13",
     "eslint": "^8.25.0",
     "gatsby-plugin-postcss": "^5.24.0",
-    "husky": "^8.0.1",
+    "husky": "^8.0.2",
     "postcss": "^8.4.19",
     "prettier": "^2.7.1",
     "semantic-release": "^19.0.5",
