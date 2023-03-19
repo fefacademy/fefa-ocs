@@ -38,7 +38,7 @@
     "embla-carousel-react": "^7.0.5",
     "gatsby": "^4.25.5",
     "gatsby-plugin-image": "^2.24.0",
-    "gatsby-plugin-layout": "^3.24.0",
+    "gatsby-plugin-layout": "^3.25.0",
     "gatsby-plugin-mantine": "^5.0.0",
     "gatsby-plugin-mdx": "^3.2.0",
     "gatsby-plugin-sharp": "^4.25.0",
