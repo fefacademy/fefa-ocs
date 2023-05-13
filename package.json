@@ -48,7 +48,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-icons": "^4.7.1",
-    "react-player": "^2.11.0",
+    "react-player": "^2.12.0",
     "remark-slug": "^7.0.1",
     "slugify": "^1.6.6",
     "video.js": "^7.20.3"
