@@ -61,7 +61,7 @@
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.0.10",
     "autoprefixer": "^10.4.13",
-    "eslint": "^8.39.0",
+    "eslint": "^8.41.0",
     "gatsby-plugin-postcss": "^5.25.0",
     "husky": "^8.0.3",
     "postcss": "^8.4.21",
