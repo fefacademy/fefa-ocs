@@ -2858,10 +2858,10 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tabler/icons@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.6.0.tgz#015275a0e13988ff8ad9c4a81cac0c754b8c0bd4"
-  integrity sha512-rflJyQSsu2iV6QgrA7ZdGaikSTdIVpXlem0jBIcx18OKg0ZJmLojmrhNo7DpOW7bCT4Hr2r6jcpq8uSYrinqZw==
+"@tabler/icons@^2.22.0":
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.22.0.tgz#1d2d56503e6485faa920b8f9aaf55e1f745cda25"
+  integrity sha512-lOsGHqRPIKNARMWHHFkUUJH78C8ptQmUcDnumFBUI4YLRKFouKa7uAZL3ZfuH0HjDpOhsnWqUYZ7FhMCLcGpAQ==
 
 "@tailwindcss/typography@^0.5.9":
   version "0.5.9"
