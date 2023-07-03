@@ -33,7 +33,7 @@
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
     "@modulz/radix-icons": "^4.0.0",
-    "@tabler/icons": "^2.6.0",
+    "@tabler/icons": "^2.23.0",
     "@videojs/themes": "^1.0.1",
     "embla-carousel-react": "^7.1.0",
     "gatsby": "^4.25.5",
