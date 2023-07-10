@@ -64,7 +64,7 @@
     "eslint": "^8.39.0",
     "gatsby-plugin-postcss": "^5.25.0",
     "husky": "^8.0.3",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.25",
     "prettier": "^2.8.3",
     "semantic-release": "^20.1.1",
     "tailwindcss": "^3.2.4",
